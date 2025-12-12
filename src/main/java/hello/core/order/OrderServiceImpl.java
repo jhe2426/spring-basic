@@ -9,7 +9,7 @@ import hello.core.member.MemoryMemberRepository;
 
 public class OrderServiceImpl implements OrderService {
 
-    private final MemberRepository memberRepository = new MemoryMemberRepository();
+    private final MemberRepository memberRepository;
     // 문제 발생
     // DIP(의존성 역전 원칙): 구체 구현에 의존하지 말고 항상 추상에 의존해야한다
     // OCP(개방-폐쇄 원칙): 기능을 확장할 때에는 코드를 열어두고 기존 코드는 수정하지 못하게 닫아둬야한다
@@ -20,7 +20,12 @@ public class OrderServiceImpl implements OrderService {
 //    private final DiscountPolicy discountPolicy = new RateDiscountPolicy();
 
     // 위의 문제 해결 방법
-    private DiscountPolicy discountPolicy;
+    private final DiscountPolicy discountPolicy;
+
+    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
+        this.memberRepository = memberRepository;
+        this.discountPolicy = discountPolicy;
+    }
 
     @Override
     public Order createOrder(Long memberId, String itemName, int itemPrice) {
