@@ -6,6 +6,8 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.*;
+
 public class SingletonTest {
 
     @Test
@@ -23,7 +25,21 @@ public class SingletonTest {
         System.out.println("memberService2 = " + memberService2);
 
         // memberService1 != memberService2
-        Assertions.assertThat(memberService1).isNotSameAs(memberService2);
+        assertThat(memberService1).isNotSameAs(memberService2);
 
+    }
+
+    @Test
+    @DisplayName("싱글톤 패턴을 적용한 객체 사용")
+    void singletonServiceTest() {
+        SingletonService singletonService1 = SingletonService.getInstaince();
+        SingletonService singletonService2 = SingletonService.getInstaince();
+
+        System.out.println("singletonService1 = " + singletonService1);
+        System.out.println("singletonService2 = " + singletonService2);
+
+        // isSameAs()는 자바에서 == 연산자를 사용해서 비용하는 것과 같은 것
+        // 즉 실제적인 들어가있는 값을 비교하는 것이 아니라 인스턴스를 비교해주는 메서드이다.
+        assertThat(singletonService1).isSameAs(singletonService2);
     }
 }
