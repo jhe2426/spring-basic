@@ -5,6 +5,8 @@ import hello.core.member.MemberService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -41,5 +43,25 @@ public class SingletonTest {
         // isSameAs()는 자바에서 == 연산자를 사용해서 비용하는 것과 같은 것
         // 즉 실제적인 들어가있는 값을 비교하는 것이 아니라 인스턴스를 비교해주는 메서드이다.
         assertThat(singletonService1).isSameAs(singletonService2);
+    }
+
+    @Test
+    @DisplayName("스프링 컨테이너와 싱글톤")
+    void springContainer() {
+
+        // 스프링 컨테이너는 싱글톤 컨테이너 역할을 하여, 싱글톤 패턴의 모든 단점을 해결하면서 객체를 싱글톤으로 유지할 수 있게 도와준다.
+        // 싱글톤 패턴을 위한 지저분한 코드가 들어가지 않아도 되고,
+        // 기존에는 구체적인 메서드를 불러와서 싱글톤 인스턴스를 가져왔가 때문에 DIP, OCP을 위반을 했으나,
+        // 스프링 컨테이너 기능 덕분에 DIP, OCP, 테스트, private 생성자로 부터 자유롭게 싱글톤을 사용할 수 있다.
+
+        ApplicationContext ac = new AnnotationConfigApplicationContext(AppConfig.class);
+        MemberService memberService1 = ac.getBean("memberService", MemberService.class);
+        MemberService memberService2 = ac.getBean("memberService", MemberService.class);
+
+        // 참조값이 같은지 확인
+        System.out.println("memberService1 = " + memberService1);
+        System.out.println("memberService2 = " + memberService2);
+
+        assertThat(memberService1).isSameAs(memberService2);
     }
 }
