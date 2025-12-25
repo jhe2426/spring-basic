@@ -18,16 +18,27 @@ public class AppConfig {
 
     @Bean
     public MemberService memberService() {
+        System.out.println("call AppConfig.memberService");
         return new MemberServiceImpl(memberRepository());
     }
 
+    // 아래의 코드에서 static 제어자를 붙이면 해당 메서드는 객체 인스턴스가 아니라 클래스 수준 메서드가 되므로
+    // 프록시가 해당 메서드 호출을 가로채서 생성된 인스턴스가 있으면 그 인스턴스를 반환해주는 것을 하지 못하게 된다.
+    // 그래서 @Configuration의 싱글톤 패턴이 깨지게 된다.
+//    @Bean
+//    public static MemberRepository memberRepository() {
+//        return new MemoryMemberRepository();
+//    }
+
     @Bean
-    public static MemberRepository memberRepository() {
+    public MemberRepository memberRepository() {
+        System.out.println("call AppConfig.memberRepository");
         return new MemoryMemberRepository();
     }
 
     @Bean
     public OrderService orderService() {
+        System.out.println("call AppConfig.orderService");
         return new OrderServiceImpl(memberRepository(), discountPolicy());
     }
 
