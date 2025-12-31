@@ -27,10 +27,10 @@ import org.springframework.context.annotation.FilterType;
 public class AutoAppConfig {
 
     // 수동으로 빈 등록하기
-    @Bean(name = "memoryMemberRepository")
-    MemberRepository memberRepository() {
-        return new MemoryMemberRepository();
-    }
+//    @Bean(name = "memoryMemberRepository")
+//    MemberRepository memberRepository() {
+//        return new MemoryMemberRepository();
+//    }
     // 자동 빈 등록 vs 수동 빈 등록
     // 스프링에서는 같은 이름의 빈이 존재한다면 수동으로 빈 등록하는 것이 우선순위를 갖는다. 그래서 수동 빈이 자동 빈을 오버라이딩 한다.
     // 스프링 부트에서는 같은 이름의 빈이 존재한다면 디폴트로 에러를 발생시키도록 되어있다.
