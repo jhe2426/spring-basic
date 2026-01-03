@@ -8,10 +8,11 @@ import hello.core.member.MemberRepository;
 import hello.core.member.MemoryMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
     // 필드 주입
@@ -59,12 +60,38 @@ public class OrderServiceImpl implements OrderService {
 //    }
 
     // @Autowired: 스프링 빈으로 등록되는 클래스의 생성자가 1개이면 생략해도 의존성 주입을 자동으로 해줌
-//    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
+    // 조회 빈이 2개 이상 문제 해결 방법: @Autowired 필드명
+        // @Autowired 필드명: @Autowired는 타입 매칭을 시도하는데 이때 빈이 여러 개가 있으면 필드 이름, 파라미터 이름으로 빈 이름을 추가 매칭
+    // @Autowired 매칭 정리
+        // 1. 타입 매칭
+        // 2. 타입 매칭의 결과가 2개 이상일 때 필드명, 파라미터 명으로 빈 이름 매칭
+//    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy rateDiscountPolicy) {
+//        System.out.println("memberRepository = " + memberRepository);
+//        System.out.println("discountPolicy = " + rateDiscountPolicy);
+//        this.memberRepository = memberRepository;
+//        this.discountPolicy = rateDiscountPolicy;
+//    }
+
+    // @Qualifier로 주입할 때 @Qualifier("mainDiscountPolicy")를 못찾으면 mainDiscountPolicy라는 이름의 스프링 빈을 추가로 찾는다.
+    // 하지만, @Qualifier는 @Qualifier로 이름을 지정한 것들을 찾는 용도로만 사용하는 것이 명확하고 좋다.
+    // 그렇지 않으면 모호하고 쉽게 헷갈릴 수 있기 때문이다.
+    // @Qualifier 정리
+        // 1. @Qualifier끼리 매칭
+        // 2. 빈 이름 매칭
+        // 3. NoSuchBeanDefinitionException 예외 발생
+//    public OrderServiceImpl(MemberRepository memberRepository, @Qualifier("mainDiscountPolicy") DiscountPolicy discountPolicy) {
 //        System.out.println("memberRepository = " + memberRepository);
 //        System.out.println("discountPolicy = " + discountPolicy);
 //        this.memberRepository = memberRepository;
 //        this.discountPolicy = discountPolicy;
 //    }
+
+    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
+        System.out.println("memberRepository = " + memberRepository);
+        System.out.println("discountPolicy = " + discountPolicy);
+        this.memberRepository = memberRepository;
+        this.discountPolicy = discountPolicy;
+    }
 
     @Override
     public Order createOrder(Long memberId, String itemName, int itemPrice) {
