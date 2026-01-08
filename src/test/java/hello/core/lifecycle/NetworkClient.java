@@ -10,6 +10,9 @@ package hello.core.lifecycle;
 // 인터페이스를 사용하는 초기화, 종료 방법은 스프링 초창기에 나온 방법이므로 지금은 거의 사용하지 않는다.
 //public class NetworkClient implements InitializingBean, DisposableBean {
 
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+
 public class NetworkClient {
 
     private String url;
@@ -43,12 +46,17 @@ public class NetworkClient {
         System.out.println("close: " + url);
     }
 
+    // 실무에서 @PostConstruct, @PreDestroy 애노테이션을 사용하면 된다.
+    // 하지만 유일한 단점으로 외부 라이브러리에는 적용하지 못 한다.(외부 라이브러리는 내부 코드를 고치지 못함)
+    // 그래서 외부라이브러리를 사용할 때 초기화, 종료 작업이 필요하면 이전 수업때 배운 @Bean의 initMethod, destroyMethod 속성을 사용하여 구현하면 됨
+    @PostConstruct
     public void init() throws Exception {
         System.out.println("NetworkClient.init");
         connect();
         call("초기화 연결 메시지");
     }
 
+    @PreDestroy
     public void close() throws Exception {
         System.out.println("NetworkClient.close");
         disconnect();
