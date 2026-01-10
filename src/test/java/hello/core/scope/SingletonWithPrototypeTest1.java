@@ -2,8 +2,10 @@ package hello.core.scope;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
+import jakarta.inject.Provider;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -35,30 +37,77 @@ public class SingletonWithPrototypeTest1 {
 
         ClientBean clientBean2 = ac.getBean(ClientBean.class);
         int count2 = clientBean2.logic();
-        assertThat(count2).isEqualTo(2);
+        assertThat(count2).isEqualTo(1);
 
     }
 
-    // 지금 아래의 코드는 싱글톤 빈에서 프로토타입 빈을 새로운 인스턴스의 값을 같도록 작성을 한 코드인데
-    // 지금의 문제점은 클라이언트(ClientBean)가 ApplicationContext 스프링 컨테이너를 직접 의존해서 코드를 작성해야하는 것이 지저분한 방법이라서 문제가 된다.
-    // 스프링에 너무 의존적이라서
+    // Provider: 자바 표준이고, 기능이 단순하므로 단위테스트를 만들거나 mock 코드를 만들기는 훨씬 쉬어진다.
+    // 특징:
+        // get()메서드 하나로 기능이 매우 단순하다.
+        // 별도의 라이브러리가 필요하다.
+        // 자바 표준이므로 스프링이 아닌 다른 컨테이너에서도 사용할 수 있다.
     @Scope("singleton")
     static class ClientBean {
 
-        // ApplicationContext: 스프링 컨테이너 자체이면서, 컨테이너에 등록된 빈 인스턴스와 빈 정의를 조회, 관리할 수 있음
         @Autowired
-        ApplicationContext applicationContext;
+        private Provider<PrototypeBean> prototypeBeanProvider;
 
         public int logic() {
-            // 프로토타입 빈은 스프링 컨테이너에서 해당 빈의 인스턴스 값을 저장하지 않고 프로토타입 빈의 정의만 저장하고 있다.
-            // 따라서 아래와 같이 컨테이너에 프로토타입 빈을 가져와라는 코드를 작성하면 컨테이너에는 해당 인스턴스를 저장하고 있지 않으므로
-            // 항상 아래의 코드를 실행할 때마다 컨테이너가 저장하고 있는 프로토타입 빈의 정의를 가지고 새로운 인스턴스를 생성한 뒤 반환해주게 된다.
-            PrototypeBean prototypeBean = applicationContext.getBean(PrototypeBean.class);
+            PrototypeBean prototypeBean = prototypeBeanProvider.get();
             prototypeBean.addCount();
             int count = prototypeBean.getCount();
             return count;
         }
     }
+
+    // DL 정도의 기능만 사용하는 방법으로 구현
+    // ObjectFactory, ObjectProvider
+        // 과거에 만들어진 것이 ObjectFactory이고 이 인터페이스를 상속받아서 조금 더 편의 기능을 추가한 인터페이스가 ObjectProvider이다.
+        // 이 인터페이스들은 직접 스프링 컨테이너에서 내가 원하는 빈들을 조회하는 것이 아니라 이 인터페이스들을 사용해서 대신 조회할 수 있도록 도와준다.
+        // 이로 인해서 많은 기능이 존재하는 스프링 컨테이너에 의존적이지 않아도 되며, 단위 테스트도 편하게 할 수 있고 필요한 빈을 필요한 시점에만
+            // 최소한의 의존으로 가져올 수 있다.
+    // ObjectFactory: 기능이 단순, 별도의 라이브러리 필요없음, 스프링에 의존
+    // ObjectProvider: ObjectFactory 상속, 옵션, 스트림 처리등 편의 기능이 많고, 별도의 라이브러리 필요없음, 스프링에 의존
+//    @Scope("singleton")
+//    static class ClientBean {
+//
+//        private ObjectProvider<PrototypeBean> prototypeBeanProvider;
+//
+//        @Autowired
+//        public ClientBean(ObjectProvider<PrototypeBean> prototypeBeanProvider) {
+//            this.prototypeBeanProvider = prototypeBeanProvider;
+//        }
+//
+//        public int logic() {
+//            PrototypeBean prototypeBean = prototypeBeanProvider.getObject();
+//            prototypeBean.addCount();
+//            int count = prototypeBean.getCount();
+//            return count;
+//        }
+//    }
+
+    // 지금 아래의 코드는 싱글톤 빈에서 프로토타입 빈을 새로운 인스턴스의 값을 갖도록 작성을 한 코드인데
+    // 지금의 문제점은 클라이언트(ClientBean)가 ApplicationContext 스프링 컨테이너를 직접 의존해서 코드를 작성해야하는 것이 지저분한 방법이라서 문제가 된다.
+    // 스프링 컨테이너에 너무 의존적이라서 별로인 코드가 되고 단위 테스트하기에도 어려워진다.
+    // 아래와 같이 의존관계를 주입받는게 아니라 이렇게 직접 필요한 의존관계를 찾는 것을 Dependency Lookup(DL) 의존관계 조회(탐색)이라고 한다.
+    // 지금 필요한 기능은 지정한 프로토타입 빈을 컨테이너에서 대신 찾아주는 DL 정도의 기능만 제공하는 무언가가 있으면 문제를 해결할 수 있다.
+//    @Scope("singleton")
+//    static class ClientBean {
+//
+//        // ApplicationContext: 스프링 컨테이너 자체이면서, 컨테이너에 등록된 빈 인스턴스와 빈 정의를 조회, 관리할 수 있음
+//        @Autowired
+//        ApplicationContext applicationContext;
+//
+//        public int logic() {
+//            // 프로토타입 빈은 스프링 컨테이너에서 해당 빈의 인스턴스 값을 저장하지 않고 프로토타입 빈의 정의만 저장하고 있다.
+//            // 따라서 아래와 같이 컨테이너에 프로토타입 빈을 가져와라는 코드를 작성하면 컨테이너에는 해당 인스턴스를 저장하고 있지 않으므로
+//            // 항상 아래의 코드를 실행할 때마다 컨테이너가 저장하고 있는 프로토타입 빈의 정의를 가지고 새로운 인스턴스를 생성한 뒤 반환해주게 된다.
+//            PrototypeBean prototypeBean = applicationContext.getBean(PrototypeBean.class);
+//            prototypeBean.addCount();
+//            int count = prototypeBean.getCount();
+//            return count;
+//        }
+//    }
 
       // 스프링은 일반적으로 싱글톤 빈을 사용하므로, 싱글톤 빈이 프로토타입 빈을 사용하게 되는데 싱글톤 빈은 생성 시점에만 의존관계를 주입받기 때문에,
       // 프로토타입 빈이 새로 생성되는 하지만 싱글톤 빈에 의존관계를 주입하게 되면 싱글톤 빈과 함께 계속 유지되는 것이 문제이다.
