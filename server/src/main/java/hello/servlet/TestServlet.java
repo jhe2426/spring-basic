@@ -1,0 +1,48 @@
+package hello.servlet;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+
+/*
+    JAR
+    - 자바는 여러 클래스와 리소스를 묶어서 JAR(Java Archive)라고 하는 압축 파일을 만들 수 있다.
+    - 이 파일은 JVM 위에서 직접 실행되거나 또는 다른 곳에서 사용하는 라이브러리로 제공된다.
+    - 직접 실행하는 경우 main() 메서드가 필요하고, MANIFEST.MF 파일에 실행할 메인 메서드가 있는 클래스를 지정해두어야 한다.
+
+    실행 예): java -jar abc.jar
+
+    WAR
+    - WAR(web Application Archive)라는 이름에서 알 수 있듯이 WAR 파일은 웹 애플리케이션 서버(WAS)에 배포할 떄 사용하는 파일
+    - JAR 파일이 JVM 위에서 실행된다면, WAR는 웹 애플리케이션 서버 위에서 실행된다.
+    - 웹 애플리케이션 서버 위에서 실행되고, HTML 같은 정적 리소스와 클래스 파일을 모두 함께 포함하기 때문에 JAR와 비교해서 구조가 더 복잡하다.
+    - 그리고 WAR 구조를 지켜야 한다.
+
+    WAR 구조
+    - WEB-INF
+        - classes: 실행 클래스 모임
+        - lib: 라이브러리 모음
+        - web.xml: 웹서버 배치 설정 파일(생략 가능)
+    - index.html: 정적 리소스
+
+    - WEB-INF 폴더 하위는 자바 클래스와 라이브러리, 그리고 설정 정보가 들어가는 곳이다.
+    - WEB-INF를 제외한 나머지 영역은 HTML, CSS 같은 정적 리소스가 사용되는 영역이다.
+*/
+
+/*
+    http://localhoat:8080/test
+*/
+@WebServlet(urlPatterns = "/test")
+public class TestServlet extends HttpServlet {
+
+
+    @Override
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println("TestServlet.service");
+        resp.getWriter().write("test");
+    }
+}
