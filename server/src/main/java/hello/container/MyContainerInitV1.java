@@ -9,8 +9,8 @@ import java.util.Set;
 /*
     서블릿은 ServletContainerInitializer라는 초기화 인터페이스를 제공한다.
     이름 그대로 서블릿 컨테이너를 초기화 하는 기능을 제공하는 인터페이스이다.
-    서브릿 컨테이너는 실행 시점에 초기화 메서드인 onStartup()을 호출해준다.
-    해당 메서드에서 애플리케이션에 필요한 기능들을 초기화 하거나 등록할 수 있다.
+    서블릿 컨테이너는 실행 시점에 초기화 메서드인 onStartup()을 호출해준다.
+    해당 메서드에서 애플리케이션에 필요한 기능들을 초기화하거나 등록할 수 있다.
 
     WAS에게 실행할 초기화 클래스를 꼭 알려줘야한다.
     resources/META-INF/services 여기 경로에 jakarta.servlet.ServletContainerInitializer 파일을 생성한 뒤
