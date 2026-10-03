@@ -68,6 +68,61 @@ import org.springframework.web.servlet.DispatcherServlet;
             jar 파일을 포함할 수 없기 때문에 라이브러리 역할을 하는 jar 파일도 항상 함께 가지고 다녀야한다.
             이 방법은 권장하지 않음
 */
+
+/*
+    내장 톰캣 - 빌드와 배포 2
+    - Jar파일 내부에 Jar를 포함하지 못하므로 라이브러리를 포함하기 위해서 나온 대안이 FarJar이다.
+    - fat jar 또는 uber jar라고 불리는 방법이다.
+    - Jar안에는 Jar를 포함할 수 없다. 하지만 클래스는 얼마든지 포함할 수 있다.
+    - 라이브러리에 사용되는 Jar를 풀면 class들이 나온다. 이 class를 뽑아서 새로 만드는 jar에 포함하는 방법이다.
+        이렇게 하면 수많은 라이브러리에서 나오는 class 때문에 뚱뚱한(fat) jar가 탄생한다. 그래서 Fat Jar라고 부르는 것이다.
+
+    - build.gradle - buildFatJar
+        task buildFatJar(type: Jar) {
+            manifest {
+                attributes 'Main-Class': 'hello.embed.EmbedTomcatSpringMain'
+            }
+            duplicatesStrategy = DuplicatesStrategy.WARN
+            from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+            with jar
+        }
+
+    - jar 빌드
+        ./gradlew clean buildFatJar
+
+    - jar 파일 실행
+        - jar 파일이 있는 폴더로 이동한 후 java -jar embed-0.0.1-SNAPSHOT.jar
+
+    - Fat Jar 압축 풀기
+        - Jar를 풀어보면 우리가 만든 클래스를 포함해서 수 많은 라이브러리에서 제공되는 클래스들이 포함되어 있는 것을 확인할 수 있다.
+
+    - Fat Jar의 장점
+        - Far Jar 덕분에 하나의 jar 파일에 필요한 라이브러리들을 내장할 수 있게 되었다.
+        - 내장 톰캣 라이브러리를 jar 내부에 내장할 수 있게 되었다.
+        - 덕분에 하나의 jar 파일로 배포부터, 웹 서버 설치 + 실행까지 모든 것을 단순화할 수 있다.
+
+    - WAR 단점과 해결
+        - 톰캣 같은 WAS를 별도로 설치해야 한다.
+            - 해결: WAS를 별도로 설치하지 않아도 된다. 톰캣 같은 WAS가 라이브러리로 jar 내부에 포함되어 있다.
+        - 개발 환경 설정이 복잡하다.
+            - 단순한 자바라면 별도의 설정을 고민하지 않고, main() 메서드만 실행하면 된다.
+            - 웹 애플리케이션은 WAS를 연동하기 위한 복잡한 설정이 들어간다.
+            - 해결: IDE에 복잡한 WAS 설정이 필요하지 않다. 단순히 main() 메서드만 실행하면 된다.
+        - 배포 과정이 복잡하다. WAR를 만들고 이것을 또 WAS에 전달해서 배포해야 한다.
+            - 해결: 배포 과정이 단순하다. JAR를 만들고 이것을 원하는 위치에서 실행만 하면 된다.
+        - 톰캣의 버전을 업데이트 하려면 톰캣을 다시 설치해야 한다.
+            - 해결: gradle에 내장 톰캣 라이브러리 버전만 변경하고 빌드 후 실행하면 된다.
+
+    - Fat Jar의 단점
+        - 어떤 라이브러리가 포함되어 있는지 확인하기 어렵다.
+            - 모두 class로 풀려있으니 어떤 라이브러리가 사용되고 있는지 추적하기 어렵다.
+        - 파일명 중복을 해결할 수 없다.
+            - 클래스나 리소스 명이 같은 경우 하나를 포기해야 한다. 이것은 심각한 문제를 발생한다.
+            - META-INF/services/jakarta.servlet.ServletContainerInitializer이 파일이 여러 라이브러리(jar)에 있을 수 있다.
+            - A 라이브러리와 B라이브러리 둘다 해당 파일을 사용해서 서블릿 컨테이너 초기화를 시도한다. 둘다 해당 파일을 jar안에 포함한다.
+            - Fat Jar를 만들면 파일명이 같으므로 A, B 라이브러리 둘다 가지고 있는 파일 중에 하나의 파일만 선택된다.
+                결과적으로 나머지 하나는 포함되지 않으므로 정상 동작하지 않는다.
+*/
 public class EmbedTomcatSpringMain {
 
     /*
