@@ -1,0 +1,79 @@
+plugins {
+    id 'org.springframework.boot' version '3.0.2'
+    //id 'io.spring.dependency-management' version '1.1.0'
+    id 'java'
+}
+
+group = 'hello'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+//스프링 부트 외부 라이브러리 버전 변경
+//ext['tomcat.version']='10.1.4'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+
+    /*
+        라이브러리 직접 선택 시 발생하는 문제
+        웹 프로젝트를 하나 설정하기 위해서는 수 많은 라이브러리를 알아야 한다. 여기에 추가로 각각의 라이브러리 버전까지 골라서
+        선택해야 한다. 여기서 눈에 보이지 않는 가장 어려운 문제는 각 라이브러리들 간에 서로 호환이 잘 되는 버전도 있지만, 잘 안 되는
+        버전도 있다는 점이다. 개발자가 라이브러리의 버전을 선택할 때 이런 부분까지 고려하는 것은 매우 어렵다.
+    */
+    //1. 라이브러리 직접 지정
+    //스프링 웹 MVC
+    implementation 'org.springframework:spring-webmvc:6.0.4'
+    //내장 톰캣
+    implementation 'org.apache.tomcat.embed:tomcat-embed-core:10.1.5'
+    //JSON 처리
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.1'
+    //스프링 부트 관련
+    implementation 'org.springframework.boot:spring-boot:3.0.2'
+    implementation 'org.springframework.boot:spring-boot-autoconfigure:3.0.2'
+    //LOG 관련
+    implementation 'ch.qos.logback:logback-classic:1.4.5'
+    implementation 'org.apache.logging.log4j:log4j-to-slf4j:2.19.0'
+    implementation 'org.slf4j:jul-to-slf4j:2.0.6'
+    //YML 관련
+    implementation 'org.yaml:snakeyaml:1.33'
+
+/*
+    //2. 스프링 부트 라이브러리 버전 관리
+    //스프링 웹, MVC
+    implementation 'org.springframework:spring-webmvc'
+    //내장 톰캣
+    implementation 'org.apache.tomcat.embed:tomcat-embed-core'
+    //JSON 처리
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    //스프링 부트 관련
+    implementation 'org.springframework.boot:spring-boot'
+    implementation 'org.springframework.boot:spring-boot-autoconfigure'
+    //LOG 관련
+    implementation 'ch.qos.logback:logback-classic'
+    implementation 'org.apache.logging.log4j:log4j-to-slf4j'
+    implementation 'org.slf4j:jul-to-slf4j'
+    //YML 관련
+    implementation 'org.yaml:snakeyaml'
+*/
+
+/*
+    //3. 스프링 부트 스타터
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+*/
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+
