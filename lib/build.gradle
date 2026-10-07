@@ -9,7 +9,7 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
 //스프링 부트 외부 라이브러리 버전 변경
-//ext['tomcat.version']='10.1.4'
+ext['tomcat.version']='10.1.4'
 
 configurations {
     compileOnly {
@@ -77,8 +77,10 @@ dependencies {
         - 스프링 부트가 제공하는 버전 관리는 스프링 자신을 포함해서 수 많은 외부 라이브러리의 버전을 최적화해서 관리해준다.
         - 이제 개발자는 스프링 부트 자체의 버전만 지정하면 된다.
         - 그리고 스프링 부트가 해당 스프링 부트 버전에 맞는 각 라이브러리의 호환성을 테스트 했기 때문에 안전하게 사용할 수 있다.
-            (물론 항상 100% 완벽할 수는 없다.) 
+            (물론 항상 100% 완벽할 수는 없다.)
     */
+
+/*
     //2. 스프링 부트 라이브러리 버전 관리
     //스프링 웹, MVC
     implementation 'org.springframework:spring-webmvc'
@@ -95,11 +97,31 @@ dependencies {
     implementation 'org.slf4j:jul-to-slf4j'
     //YML 관련
     implementation 'org.yaml:snakeyaml'
+*/
 
-/*
+    /*
+        스프링 부트 스타터
+        - 웹 프로젝트를 하나 실행하려면 생각보다 수 많은 라이브러리가 필요하다.
+        - 스프링 웹 MVC, 내장 톰캣, JSON 처리, 스프링 부트 관련, LOG, YML 등등 다양한 라이브러리가 사용된다.
+        - 개발자 입장에서는 그냥 웹 프로젝트를 하나 시작하고 싶은 것이고, 일반적으로 많이 사용하는 대중적인 라이브러리들을 포함해서 간단하게 시작하고 싶을 것이다.
+        - 스프링 부트는 이런 문제를 해결하기 위해 프로젝트를 시작하는데 필요한 관련 라이브러리를 모아둔 스프링 부트 스타터를 제공한다.
+        - 스프링 부트 스타터 덕분에 누구나 쉽고 편리하게 프로젝트를 시작할 수 있다.
+        - spring-boot-starter-web이 라이브러리 하나로 지금까지 우리가 직접 넣어주었던 모든 라이브러리가 포함된다.
+        - 이것은 사용하기 편리하게 의존성을 모아둔 세트이다.
+            - 이것을 하나 포함하면 관련 의존성 세트가 한 번에 들어온다.
+        - 스프링과 웹을 사용하고 싶으면 spring-boot-starter-web
+            - 스프링 웹 MVC, 내장 톰캣, JSON 처리, 스프링 부트 관련, LOG, YML 등등
+        - 스프링과 JPA를 사용하고 싶으면 spring-boot-starter-data-jpa
+            - 스프링 데이터 JPA, 하이버네이트 등등
+
+        라이브러리 버전 변경
+        - 외부 라이브러리의 버전을 변경하고 싶을 때 다음과 같은 형식으로 편리하게 변경할 수 있다.
+            ext['tomcat.version'] = '10.1.4'
+        - 스프링 부트가 관리하는 외부 라이브러리 버전 변경에 필요한 속상 값
+            https://docs.spring.io/spring-boot/appendix/dependency-versions/properties.html#appendix.dependency-versions.properties
+    */
     //3. 스프링 부트 스타터
     implementation 'org.springframework.boot:spring-boot-starter-web'
-*/
 }
 
 tasks.named('test') {
