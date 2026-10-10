@@ -47,9 +47,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 
-
-
-
     @Configuration(proxyBeanMethods = false)
     @ConditionalOnMissingBean(JdbcOperations.class)
     class JdbcTemplateConfiguration {
@@ -98,7 +95,7 @@ import static org.junit.jupiter.api.Assertions.*;
         - Configuration이라는 단어는 구성, 배치라는 뜻도 있다.
             예를 들어서 컴퓨터라고 하면 CPU, 메모리등을 배치해야 컴퓨터가 동작한다. 이렇게 배치하는 것을 구성이라 한다.
             스프링도 스프링 실행에 필요한 빈들을 적절하게 배치해야 한다. 자동 구성은 스프링 실행에 필요한 빈들을 자동으로 배치해주는 것이다.
-    - 자동설정, 자동 구성 두 용어 모두 맞는 말이다. 자동 설정은 넓게 사용되는 의미이고, 자동 구성은 실행에 필요한 컴포넌트 조각을 자동으로 배치한다는 더 좁은 의미에 가깝다.
+    - 자동 설정, 자동 구성 두 용어 모두 맞는 말이다. 자동 설정은 넓게 사용되는 의미이고, 자동 구성은 실행에 필요한 컴포넌트 조각을 자동으로 배치한다는 더 좁은 의미에 가깝다.
     - Auto Configuration은 자동 구성이라는 단어를 주로 사용하고, 문맥에 따라서 자동 설정이라는 단어도 사용이 된다.
     - Configuration이 단독으로 사용될 때에는 설정이라는 단어로 사용이 된다.
 
