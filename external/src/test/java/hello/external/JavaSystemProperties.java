@@ -8,7 +8,7 @@ import java.util.Properties;
     외부 설정 - 자바 시스템 속성
     - 자바 시스템 속성은 실행한 JVM 안에서 접근 가능한 외부 설정이다. 추가로 자바가 내부에서 미리 설정해두고 사용하는 속성들도 있다.
     - 자바 시스템 속성은 다음과 같이 자바 프로그램을 실행할 때 사용한다.
-        - 예) java -Durl=dev jar app.jark
+        - 예) java -Durl=dev jar app.jar
         - -D VM 옵션을 통해서 key=value 형식을 주면 된다.
         - 순서에 주의해야 한다. -D 옵션이 -jar 보다 앞에 위치해야 한다.
 
