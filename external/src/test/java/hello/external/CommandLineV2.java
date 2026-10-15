@@ -50,10 +50,6 @@ import java.util.Set;
     - 참고로 옵션 인수는 --username=userA --username=userB처럼 하나의 키에 여러 값을 포함할 수 있기 때문에
         appArgs.getOptionValues(key)의 결과는 리스트(List)를 반환한다.
     - 커맨드 라인 옵션 인수는 자바 언어의 표준 기능이 아니다. 스프링이 편리함을 위해 제공하는 기능이다.
-
-
-
-
 */
 @Slf4j
 public class CommandLineV2 {
