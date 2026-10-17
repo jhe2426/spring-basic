@@ -138,6 +138,32 @@ import org.springframework.stereotype.Component;
     남은 문제
     - 설정 파일을 각각 분리해서 관리하면 한눈에 전체가 들어오지 않는 단점이 있다.
 */
+
+/*
+    설정 데이터3 - 내부 파일 합체
+    - 설정 파일을 각각 분리해서 관리하면 한눈에 전체가 들어오지 않는 단점이 있다.
+    - 스프링은 이런 단점을 보완하기 위해 물리적인 하나의 파일 안에서 논리적으로 영역을 구분하는 방법을 제공한다.
+
+    설정 데이터 - 하나의 파일로 통합
+    - 기존에는 dev 환경은 application-dev.properties, prod환경은 application-prod.properties 파일이 필요했다.
+    - 스프링은 하나의 application.properties 파일 안에서 논리적으로 영역을 구분하는 방법을 제공한다.
+    - application.properties라는 하나의 파일 안에서 논리적으로 영역을 나눌 수 있다.
+        - application.properties 구분 방법 #--- 또는 !---(dash 3)
+        - application.yml 구분 방법 ---(dash 3)
+    - 프로필에 따라 논리적으로 구분된 설정 데이터를 활성화하는 방법
+        - spring.config.activate.on-profile에 프로필 값 지정
+
+    주의!
+    - 속성 파일 구분 기호에는 선행 공백이 없어야 하며 정확히 3개의 dash(-) 문자가 있어야 한다.
+    - 구분 기호 바로 앞과 뒤의 줄은 주석 접두사가 아니어야 한다.
+        ex1)
+            #
+            #---
+        ex2)
+            #---
+            #
+        분할 기호 위, 아래에 주석 기호 #가 존재한다면 문서가 정상적으로 읽히지 않을 수 있다.
+*/
 @Slf4j
 @Component
 public class EnvironmentCheck {
