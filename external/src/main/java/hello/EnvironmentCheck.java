@@ -79,7 +79,7 @@ import org.springframework.stereotype.Component;
     - ./gradlew clean build
     - build/libs로 이동
     - 해당 위치에 application.properties 파일 생성
-        해당 파일에 아래의 내용작성 후 저장
+        해당 파일에 아래의 내용 작성 후 저장
         url=dev.db.com
         username=dev_user
         password=dev_pw
@@ -91,6 +91,52 @@ import org.springframework.stereotype.Component;
     - 서버가 10대이면 변경사항이 있을 때 10대 서버의 설정 파일을 모두 가각 변경해야 하는 불편함이 있다.
     - 설정 파일이 별도로 관리되기 때문에 설정값의 변경 이력을 확인하기 어렵다. 특히 설정값의 변경 이력이 프로젝트 코드들과
         어떻게 영향을 주고 받는지 그 이력을 같이 확인하기 어렵다.
+*/
+
+/*
+    설정 데이터2 - 내부 파일 분리
+    - 설정 파일을 외부에 관리하는 것은 상당히 번거로운 일이다. 설정을 변경할 때마다 서버에 들어가서 각각의 변경 사항을 수정해두어야 한다.
+    - 이 문제를 해결하는 간단한 방법은 설정 파일을 프로젝트 내부에 포함해서 괸리하는 것이다. 그리고 빌드 시점에 함께 빌드되게 하는 것이다.
+    - 이렇게 하면 애플리케이션을 배포할 때 설정 파일의 변경 사항도 함꼐 배포할 수 있따. jar 하나로 설정 데이터까지 포함해서 괸리하는 것이다.
+
+    실행 시점에 내부 설정 파일 조회
+    0. 프로젝트 안에 소스 코드 뿐만 아니라 각 환경에 필요한 설정 데이터도 함께 포함해서 관리한다.
+        - 개발용 설정 파일: application-dev.properties
+        - 운영용 설정 파일: application-prod.properties
+    1. 빌드 시점에 개발, 운영 설정 파일을 모두 포함해서 빌드한다.
+    2. app.jar는 개발, 운영 두 설정 파일을 모두 가지고 배포한다.
+    3. 실행할 때 어떤 설정 데이터를 읽어야 할지 최소한의 구분은 필요하다.
+        - 개발 환경이라면 application-dev.properties를 읽어야 하고,
+        - 운영 환경이라면 application-prod.properties를 읽어야 한다.
+        - 실행할 때 외부 설정을 사용해서 개발 서버는 dev라는 값을 제공하고, 운영 서버는 prod라는 값을 제공하면 된다.
+            - dev 프로필이 넘어오면 application-dev.properties를 읽어서 사용한다.
+            - prod 프로필이 넘어오면 application-prod.properties를 읽어서 사용한다.
+    프로필
+    - 스프링은 프로필이라는 개념을 지원한다.
+    - spring.profiles.active 외부 설정에 값을 넣으면 해당 프로필을 사용한다고 판단한다.
+    - 그리고 프로필에 따라서 다음과 같은 규칙으로 해당 프로필에 맞는 내부 파일(설정 데이터)을 조회한다.
+        - application-{profile}.properties
+        예)
+        - spring.profiles.active=dev
+            - dev 프로필이 활성화 되었다.
+            - application-dev.properties를 설정 데이터로 사용한다.
+        - spring.profiles.active=prod
+            - prod 프로필이 활성화 되었다.
+            - application-prod.properties를 설정 데이터로 사용한다.
+
+    실행
+    - IDE에서 커맨드 라인 옵션 인수 실행
+        - --spring.profiles.active=dev
+    - IDE에서 자바 시스템 속성 실행
+        - -Dspring.profiles.active=dev
+    - Jar 실행
+        - ./gradlew clean build
+        - build/libs로 이동
+        - java -Dspring.profiles.active=dev -jar external-0.0.1-SNAPSHOT.jar
+        - java -jar external-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev
+
+    남은 문제
+    - 설정 파일을 각각 분리해서 관리하면 한눈에 전체가 들어오지 않는 단점이 있다.
 */
 @Slf4j
 @Component
