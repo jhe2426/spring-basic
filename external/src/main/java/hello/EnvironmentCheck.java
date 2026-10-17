@@ -164,6 +164,62 @@ import org.springframework.stereotype.Component;
             #
         분할 기호 위, 아래에 주석 기호 #가 존재한다면 문서가 정상적으로 읽히지 않을 수 있다.
 */
+
+/*
+    우선순위 - 설정 데이터
+    - 프로필을 지정하지 않고 실행하면 스프링은 기본으로 default라는 이름의 프로필을 사용한다.
+
+    기본값
+    - 내 PC에서 개발하는 것을 보통 로컬(local) 개발 환경이라 한다. 이때도 항상 프로필을 지정하면서 실행하는 것은 상당히 피곤할 것이다.
+    - 설정 데이터에는 기본값을 지정할 수 있는데, 프로필 지정과 무관하게 이 값은 항상 사용된다.
+    - 스프링은 문서를 위에서 아래로 순서대로 읽으면서 설정한다.
+    - 프로필 지정과 무관하게 사용되는 것을 기본값이라 한다.
+        url=local.db.com
+        username=local_user
+        password=local_pw
+
+    설정 데이터 적용 순서
+    - 스프링은 단순하게 문서를 위에서 아래로 순서대로 읽으면서 사용할 값을 설정한다.
+        1. 스프링은 순서상 위에 있는 local 관련 논리 문서의 데이터들을 읽어서 설정한다. 여기에는 spring.config.activate.on-profile와 같은 별도의
+            프로필을 지정하지 않았기 때문에 프로필과 무관하게 항상 값을 사용하도록 설정한다.
+        2. 스프링은 그 다음 순서로 dev로 관련 논리 문서를 읽는데 만약 dev 프로필이 설정되어있다면 기존 데이터를 dev 관련 논리 문서의 값으로 대체한다.
+            물론 dev 프로필을 사용하지 않는다면 dev 관련 논리 문서는 무시되고, 그 값도 사용하지 않는다.
+        3. 스프링은 그 다음 순서로 prod 관련 논리 문서를 읽는데 만약 prod 프로필이 설정되어있다면 기존 데이터를 prod 관련 논리 문서의 값으로 대체한다.
+            물론 prod 프로필을 사용하지 않는다면 prod 관련 논리 문서는 무시되고, 그 값도 사용하지 않는다.
+    - 참고로 프로필을 한 번에 둘 이상 설정하는 것도 가능하다.
+        - --spring.profiles.active=dev, prod
+
+    순서대로 설정 확인
+        url=local.db.com
+        username=local_user
+        password=local_pa
+        #---
+        spring.config.activate.on-profile=dev
+        url=dev.db.com
+        username=dev_user
+        password=dev_pa
+        #---
+        spring.config.activate.on-profile=prod
+        url=prod.db.com
+        username=prod_user
+        password=prod_pa
+        #--
+        url=hello.db.com
+    1. 스프링은 처음에 local 관련 논리 문서의 데이터들을 읽어서 설정한다. 여기에는 별도의 프로필을 지정하지 않았기 떄문에 프로필과 무관하게 항상 값이 설정된다.
+    2. 스프링은 그 다음 순서로 dev 관련 논리 문서를 읽는데 만약 dev 프로필이 설정되어있다면 기존 데이터를 dev 관련 논리 문서의 값으로 대체한다.
+    3. 스프링은 그 다음 순서로 prod 관련 논리 문서를 읽는데 만약 prod 프로필이 설정되어있다면 기존 데이터를 prod 관련 논리 문서의 값으로 대체하낟.
+    4. 스프링은 마지막으로 hello 관련 논리 문서의 데이터들을 읽어서 설정한다. 여기에는 별도의 프로필을 지정하지 않았기 때문에 프로필과 무관하게 항상 값이 설정된다.
+    - 위에서 아래로 순서대로 실행하는데, 마지막에는 프로필이 없기 때문에 항상 마지막의 값들을 적용하게 된다.
+        만약 prod 프로필을 사용한다면 다음과 같이 설정된다.
+            url=hello.db.com
+            username=prod_user
+            password=prod_pw
+    - 물론 이렇게 사용하는 것은 의미가 없다. 이해를 위한 예제일 뿐, 보통은 기본값을 처음에 두고 그 다음에 프로필이 필요한 논리 문서들을 둔다.
+
+    정리하면 다음과 같다.
+    - 단순하게 문서를 위에서 아래 순서대로 읽으면서 값을 설정한다. 이때 기존 데이터가 있으면 덮어쓴다.
+    - 논리 문서에 spring-config.activate.on-profile 옵션이 있으면 해당 프로필을 사용할 때만 논리 문서를 적용한다.
+*/
 @Slf4j
 @Component
 public class EnvironmentCheck {
