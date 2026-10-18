@@ -220,6 +220,35 @@ import org.springframework.stereotype.Component;
     - 단순하게 문서를 위에서 아래 순서대로 읽으면서 값을 설정한다. 이때 기존 데이터가 있으면 덮어쓴다.
     - 논리 문서에 spring-config.activate.on-profile 옵션이 있으면 해당 프로필을 사용할 때만 논리 문서를 적용한다.
 */
+
+/*
+    우선순위 - 전체
+    - 우선순위는 위에서 아래로 적용된다. 아래가 더 우선순위가 높다.
+    자주 사용하는 우선순위
+    - 설정 데이터(application.properties)
+    - OS 환경변수
+    - 자바 시스템 속성
+    - 커맨드 라인 옵션 인수
+    - @TestPropertySource (테스트에서 사용할 외부 설정)
+
+    설정 데이터 우선순위
+    - jar 내부 application.properties
+    - jar 내부 프로필 적용 파일 application-{profile}.properties
+    - jar 외부 application.properties
+    - jar 외부 프로필 적용 파일 application-{profile}.properties
+
+    추가 또는 변경되는 방식
+    - Environment를 통해서 조회하는 관점에서 보면 외부 설정 값들은 계속 추가되거나 기존 값을 덮어서 변경하는 것처럼 보인다.
+    - 실제 값을 덮어서 변경하는 것은 아니고, 우선순위가 높은 값이 조회되는 것이다.
+        그런데 외부 설정 값들을 계속 추가되거나 기존 값을 덮어서 변경하는 것이라고 바라보는 관점이 더 쉽게 이해할 수 있다.
+
+    정리
+    - 이렇게 우선순위에 따라서 설정을 추가하거나 변경하는 방식은 상당히 편리하면서도 유연한 구조를 만들어준다.
+    - 실무에서 대부분의 개발자들은 application.properties에 외부 설정 값들을 보관한다. 이렇게 설정 데이터를 기본으로 사용하다가
+        일부 속성을 변경할 필요가 있다면 더 높은 우선순위를 가지는 자바 시스템 속성이나 커맨드 라인 옵션 인수를 사용하면 되는 것이다.
+    - 또는 기본적으로 application.properties를 jar 내부에 저장하고 있다가, 특별한 환경에서는 application.properties를 외부 파일로 새로 만들고
+        변경하고 싶은 일부 속성만 입력해서 변경하는 것도 가능하다.
+*/
 @Slf4j
 @Component
 public class EnvironmentCheck {
