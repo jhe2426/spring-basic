@@ -1,6 +1,7 @@
 package hello;
 
 import hello.config.MyDataSourceEnvConfig;
+import hello.config.MyDataSourceValueConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
@@ -12,7 +13,8 @@ import org.springframework.context.annotation.Import;
         - scanBasePackages 설정을 하지 않으면 현재 위치인 hello 패키지부터 그 하위가 모두 컴포넌트 스캔이 된다.
             @Configuration을 포함하고 있는 MyDataSourceEnvConfig이 항상 컴포넌트 스캔의 대상이 된다.
 */
-@Import(MyDataSourceEnvConfig.class)
+//@Import(MyDataSourceEnvConfig.class)
+@Import(MyDataSourceValueConfig.class)
 @SpringBootApplication(scanBasePackages = "hello.datasource")
 public class ExternalReadApplication {
 
