@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 /*
     ApplicationRunner 인터페이스를 사용하면 스프링은 빈 초기화가 모두 끝나고 애플리케이션 로딩이 완료되는 시점에 run(args) 메서드를 호출해준다.
-
 */
 @Component
 @RequiredArgsConstructor
