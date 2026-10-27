@@ -40,6 +40,17 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
     - mappings: @RequestMapping 정보를 보여준다.
     - threaddump: 쓰레드 덤프를 실행해서 보여준다.
     - shutdown: 애플리케이션을 종료한다. 이 기능은 기본으로 비활성 되어 있다.
+
+    헬스 정보
+    - 헬스 정보를 사용하면 애플리케이션에 문제가 발생했을 때 문제를 빠르게 인지할 수 있다.
+    - 헬스 정보는 단순히 애플리케이션이 요청에 응답을 할 수 있는지 판단하는 것을 넘어서 애플리케이션이 사용하는 데이터베이스가 응답하는지,
+        디스크 사용량에는 문제가 없는지 같은 다양한 정보들을 포함해서 만들어진다.
+    - 헬스 정보를 자세히 보려면 management.endpoint.health.show-details=always 옵션을 지정하면 된다.
+    - 위의 옵션은 아주 자세하게 노출이되므로 그게 부담스러우면 show-details 옵션을 제거하고 show-components: always 옵션을 사용하면 된다.
+
+    헬스 이상 상태
+    - 헬스 컴포넌트 중에 하나라도 문제가 있으면 전체 상태는 DOWN이 된다.
+    - 참고로 액츄에이터는 db, mongo, redis, diskspace, ping과 같은 수 많은 헬스 기능을 기본으로 제공한다.
 */
 @SpringBootApplication
 public class ActuatorApplication {
