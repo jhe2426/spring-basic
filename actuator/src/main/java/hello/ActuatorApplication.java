@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
         - 지표, 추적, 감사
         - 모니터링
     - 애플리케이션이 현재 살아있는지, 로그 정보는 정상 설정되었는지, 커넥션 풀은 얼마나 사용되고 있는지 등을 확인할 수 있어야함
-    - 스프링 부트가 제공하는 엑추에이터는 이런 프로덕션 준비 기능으 매우 편리하게 사용할 수 있는 다양한 편의 기능들을 제공
+    - 스프링 부트가 제공하는 엑추에이터는 이런 프로덕션 준비 기능을 매우 편리하게 사용할 수 있는 다양한 편의 기능들을 제공
     - 더 나아가서 마이크로미터, 프로메테우스, 그라파나 같은 모니터링 시스템과 매우 쉽게 연동할 수 있는 기능도 제공
 
     - 엔드포인트 설정
@@ -25,6 +25,21 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
         - http://localhost:8080/actuator/beans: 스프링 컨테이너에 등록된 빈을 보여준다.
 
     - 서버의 동작을 바꾸는 요청또한 POST 요청으로 보내야 함 그래서 shutdown 엔드 포인트는 POST 요청을 해야 함 서버를 끄는 서버의 변경 작업이 발생하므로
+
+
+    다양한 엔드포인트 목록
+    - beans: 스프링 컨테이너에 등록된 스프링 빈을 보여준다.
+    - conditions: condition을 통해서 빈을 등록할 때 평가 조건과 일치하거나 일치하지 않는 이유를 표시한다.
+    - configprops: @ConfigurationProperties를 보여준다.
+    - env: Environment 정보를 보여준다.
+    - health: 애플리케이션 헬스 정보를 보여준다.
+    - httpexchanges: HTTP 호출 응답 정보를 보여준다. HttpExchangeRepository를 구현한 빈을 별도로 등록해야 한다.
+    - info: 애플리케이션 정보를 보여준다.
+    - loggers: 애플리케이션 로거 설정을 보여주고 변경도 할 수 있다.
+    - metrics: 애플리케이션의 메트릭 정보를 보여준다.
+    - mappings: @RequestMapping 정보를 보여준다.
+    - threaddump: 쓰레드 덤프를 실행해서 보여준다.
+    - shutdown: 애플리케이션을 종료한다. 이 기능은 기본으로 비활성 되어 있다.
 */
 @SpringBootApplication
 public class ActuatorApplication {
