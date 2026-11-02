@@ -85,6 +85,36 @@ import org.springframework.context.annotation.Bean;
         스프링 부트 액츄에이터는 마이크로미터를 기본으로 내장해서 사용한다.
     - 개발자는 마이크로미터가 정한 표준 방법으로 메트릭(측정 지표)를 전달하면 된다. 그리고 사용하는 모니터링 툴에 맞는 구현체를 선택하면 된다.
         이후에 모니터링 툴이 변경되어도 해당 구현체만 변경하면 된다. 애플리케이션 코드는 모니터링 툴이 변경되어도 그대로 유지할 수 있다.
+
+    메트릭 확인하기
+    - CPU, JVM, 커넥션 사용 등등 수 많은 지표들을 어떻게 수집할까?
+    - 개발자가 각각의 지표를 직접 수집해서 그것을 마이크로미터가 제공하는 표준 방법에 따라 등록하면 된다.
+    - 다행히도 마이크로미터는 다양한 지표 수집 기능을 이미 만들어서 제공한다. 그리고 스프링 부트 액츄에이터는 마이크로미터가 제공하는 지표 수집을 @AutoConfiguration을 통해 자동으로 등록해준다.
+    - 쉽게 이야기해서 스프링 부트 액츄에이터를 사용하면 수 많은 메트릭(지표)를 편리하게 사용할 수 있다.
+
+    metrics 엔드포인트
+    - http://localhost:8080/actuator/metrics
+
+    자세히 확인하기
+    - metrics 엔드포인트는 다음과 같은 패턴을 사용해서 더 자세히 확인할 수 있다.
+    - http://localhost:8080/actuator/metrics/{name}
+
+    Tag 필터
+    - availableTages를 보면 다음과 같은 항목을 확인할 수 있다.
+    - tag: area, values[heep, nonheap]
+    - tag: id, value[G1 Survivor Space, ...]
+    - 해당 Tag를 기반으로 정보를 필터링해서 확인할 수 있다.
+    - tag=KEY:VALUE과 같은 형식을 사용해야 한다.
+    - http://localhost:8080/actuator/metrics/jvm.memory.used?tag=area:heap
+    - http://localhost:8080/actuator/metrics/jvm.memory.used?tag=area:nonheap
+
+    HTTP 요청수 확인
+    - http://localhost:8080/actuator/metrics/http.server.requests
+    - HTTP 요청수에서 일부 내용을 필터링해서 확인해보자
+        - /log 요청만 필터 (사전에 /log 요청을 해야 확인할 수 있음)
+        - http://localhost:8080/actuator/metrics/http.server.requests?tag=url:/log
+    - /log 요청 & HTTP Status = 200
+        - http://localhost:8080/actuator/metrics/http.server.request?tag=url:/log&tag=status:200
 */
 @SpringBootApplication
 public class ActuatorApplication {
