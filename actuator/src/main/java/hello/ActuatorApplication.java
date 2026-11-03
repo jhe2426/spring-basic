@@ -116,6 +116,83 @@ import org.springframework.context.annotation.Bean;
     - /log 요청 & HTTP Status = 200
         - http://localhost:8080/actuator/metrics/http.server.request?tag=url:/log&tag=status:200
 */
+
+/*
+    다양한 메트릭
+    - 마이크로미터와 액츄에이터가 기본으로 제공하는 다양한 메트릭은 아래와 같다.
+        - JVM 메트릭
+        - 시스템 메트릭
+        - 애플리케이셔 시작 메트릭
+        - 스프링 MVC 메트릭
+        - 톰캣 메트릭
+        - 데이터 소스 메트릭
+        - 로그 메트릭
+        - 기타 수 많은 메트릭이 존재
+        - 사용자가 메트릭을 직접 정의하는 것도 가능
+
+    JVM 메트릭
+    - JVM 관련 메트릭을 제공한다. jvm.으로 시작한다.
+        - 메모리 및 버퍼 풀 세부 정보
+        - 가비지 수집 관련 통계
+        - 스레드 활용
+        - 로드 및 언로드된 클래스 수
+        - JVM 버전 정보
+        - JIT 컴파일 시간
+
+    시스템 메트릭
+    - 시스템 메트릭을 제공한다. system., process., disk. 으로 시작한다.
+        - CPU 지표
+        - 파일 디스크립터 메트릭
+        - 가동 시간 메트릭
+        - 사용 가능한 디스크 공간
+
+    애플리케이션 시작 메트릭
+    - 애플리케이션 시작 시간 메트릭을 제공한다.
+        - application.started.time: 애플리케이션을 시작하는 데 걸리는 시간(ApplicationStartedEvent로 측정)
+        - application.ready.time: 애플리케이션이 요청을 처리할 준비가 되는데 걸리는 시간(ApplicationReadyEvent로 측정)
+    - 스프링은 내부에 여러 초기화 단계가 있고 각 단계별로 내부에서 애플리케이션 이벤트를 발행한다.
+        - ApplicationStartedEvent: 스프링 컨테이너가 완전히 실행된 상태이다. 이후에 커맨드 라인 러너가 호출된다.
+        - ApplicationReadyEvent: 커맨드 라인 러너가 실행된 이후에 호출된다.
+
+    스프링 MVC 메트릭
+    - 스프링 MVC 컨트롤러가 처리하는 모든 요청을 다룬다.
+    - 메트릭 이름: http.server.requests
+    - TAG를 사용해서 다음 정보를 분류해서 확인할 수 있다.
+        - uri: 요청 URI
+        - method: GET, POST 같은 HTTP 메서드
+        - status: 200, 400, 500 같은 HTTP Status 코드
+        - exception: 예외
+        - outcome: 상태코드를 그룹으로 모아서 확인 1xx:INFORMATIONAL, 2xx:SUCCESS, 3xx:REDIRECTION, 4xx:CLIENT_ERROR, 5xx:SERVER_ERROR
+
+    데이터소스 메트릭
+    - DataSource, 커넥션 풀에 관한 메트릭을 확인할 수 있다.
+    - jdbc.connections.으로 시작한다.
+    - 최대 커넥션, 최소 커넥션, 활성 커넥션, 대기 커넥션 수 등을 확인할 수 있다.
+    - 히카리 커넥션 풀을 사용하면 hikaricp. 를 통해 히카리 커넥션 풀의 자세한 메트릭을 확인할 수 있다.
+
+    로그 메트릭
+    - logback.events: logback 로그에 대한 메트릭을 확인할 수 있다.
+    - trace, debug, info, warn, error 각각의 로그 레벨에 따른 로그 수를 확인할 수 있다.
+    - 예를 들어서 error 로그 수가 급격히 높아진다면 위험한 신호로 받아드릴 수 있다.
+
+    톰캣 메트릭
+    - 톰캣 메트릭은 tomcat. 으로 시작한다.
+    - 톰캣 메트릭을 모두 사용하려면 다음 옵션을 켜야한다. (옵션을 켜지 않으면 tomcat.session. 관련 정보만 노출된다.)
+        server.tomcat.mbeanregistry.enabled: true
+    - 톰캣의 최대 쓰레드, 사용 쓰레드 수를 포함한 다양한 메트릭을 확인할 수 있다.
+
+    기타
+    - HTTP 클라이언트 메트릭(RestTemplate, WebClient)
+    - 캐시 메트릭
+    - 작업 실행과 스케줄 메트릭
+    - 스프링 데이터 리포지토리 메트릭
+    - 몽고DB 메트릭
+    - 레디스 메트릭
+
+    사용자 정의 메트릭
+    - 사용자가 직접 메트링르 정의할 수도 있다. 예를 들어서 주문수, 취소수를 메트릭으로 만들 수 있다.
+    - 사용자 정의 메트릭을 만들기 위해서는 마이크로미터의 사용법을 먼저 이해해야 한다.
+*/
 @SpringBootApplication
 public class ActuatorApplication {
 
