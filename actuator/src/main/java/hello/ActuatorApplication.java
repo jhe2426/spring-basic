@@ -210,6 +210,65 @@ import org.springframework.context.annotation.Bean;
     3. 프로메테우스는 수집한 메트릭을 내부 DB에 저장한다.
     4. 사용자는 그라파나 대시보드 툴을 통해 그래프로 편리하게 메트릭을 조회한다. 이때 필요한 데이터는 프로메테우스를 통해서 조회한다.
 */
+/*
+    프로메테우스 - 기본 기능
+    - 태그, 레이블: error, exception, instance, job, method, outcome, status, uri는 각각의 메트릭 정보를 구분해서 사용하기 위한 태그이다.
+        마이크로미터에서는 이것을 태그(Tag)라 하고, 프로메테우스에서는 레이블(Label)이라고 한다.
+
+    기본 기능
+    - Table -> Evaluation item을 수정해서 과거 시간 조회 가능
+    - Graph -> 메트릭을 그래프로 조회 가능
+
+    필터
+    - 레이블을 기준으로 필터를 사용할 수 있다. 필터는 중괄호({}) 문법을 사용한다.
+    - 레이블 일치 연산자
+        = 제공된 문자열과 정확히 동일한 레이블 선택
+        != 제공된 문자열과 같지 않은 레이블 선택
+        =~ 제공된 문자열과 정규식 일치하는 레이블 선택
+        !~ 제공된 문자열과 정규식 일치하지 않는 레이블 선택
+
+        예)
+            uri=/log, method=GET 조건으로 필터
+                http_server_requests_seconds_count{uri="/log", method="GET"}
+            /actuator/prometheus는 제외한 조건으로 필터
+                http_server_requests_seconds_count{uri!="/actuator/prometheus"}
+            method가 GET, POST인 경우를 포함해서 필터
+                http_server_requests_seconds_count{method=~"GET|POST"}
+            /actuator로 시작하는 uri는 제외한 조건으로 필터
+                http_server_requests.seconds.count{uri~"/actuator.*"}
+
+    연산자 쿼리와 함수
+    - +
+    - -
+    - *
+    - /
+    - %
+    - ^
+
+    sum: 값의 합계를 구함
+    예) sum(http_server_requests_seconds_count)
+
+    sum by
+    sum by(method, status)(http_server_requests_seconds_count)
+        SQL의 group by 기능과 유사하다.
+
+   count
+   count(http_server_requests_seconds_count)
+   메트릭 자체의 수 카운트
+
+   topk
+   topk(3, http_server_request_seconds_count)
+   상위 3개 메트릭 조회
+
+   오프셋 수정자
+   http_server_requests_seconds_count offset 10m
+   offset 10m과 같이 나타낸다. 현재를 기준으로 특정 과거 시점의 데이터를 반환한다.
+
+   범위 벡터 선택기
+   http_server_requests_seconds_count[1m]
+   - 마지막에 [1m], [60s]와 같이 표현한다. 지난 1분간의 모든 기록값을 선택한다.
+   - 참고로 범위 백터 선택기는 차트에 바로 표현할 수 없다. 데이터로는 확인할 수 있다. 범위 벡터 선택의 결과를 차트에 표현하기 위해서는 약간의 가공이 필요
+*/
 @SpringBootApplication
 public class ActuatorApplication {
 
