@@ -313,7 +313,58 @@ import org.springframework.context.annotation.Bean;
     정리
     - 게이지: 값이 계속 변하는 게이지는 현재 값을 그대로 그래프로 표현하면 된다.
     - 카운터: 값이 단조롭게 증가하는 카운터는 increase(), rate() 등을 사용해서 표현하면 된다. 이렇게 하면 카운터에서 특정 시간에 얼마나 고객의 요청이 들어왔는지 확인할 수 있다.
+*/
+/*
+    그라파나 - 연동
+    - 그라파나는 프로메테우스를 통해서 데이터를 조회하고 보여주는 역할을 한다. 쉽게 이야기해서 그라파나는 대시보드의 껍데기 역할을 한다.
 
+    그라파나 데이터 소스 추가하기
+    - 왼쪽 하단에 있는 설정(Configuration) 버튼에서 Data sources를 선택
+    - Add data source를 선택
+    - Prometheus를 선택
+
+    Prometheus 데이터 소스 설정
+    - URL: http://localhost:9090
+    - 나머지는 특별히 고칠 부분이 없다면 그대로 두고 Save & test를 선택
+
+    그라파나 - 대시보드 만들기
+    - 먼저 다음 3가지를 꼭 수행두어야 함
+        - 애플리케이션 실행
+        - 프로메테우스 실행
+        - 그라파나 실행
+
+    대시보드 만들기
+        대시보드 저장
+            1. 왼쪽 Dashboards 메뉴 선택
+            2. New 버튼 선택 -> New Dashboard 선택
+            3. 오른쪽 상단의 Save dashboard 저장 버튼(disk 모양) 선택
+            4. Dashboard name: hello dashboad를 입력하고 저장
+    대시보드 확인
+        1. 왼쪽 Dashboards 메뉴 선택
+        2. 앞서 만든 hello dashboard 선택
+
+    패널 만들기
+    대시보드에 패널 만들기
+    - 대시보드가 큰 틀이라면 패널은 그 안에 모듈처럼 들어가는 실제 그래프를 보여주는 컴포넌트이다.
+        1. 오른쪽 상단의 Add panel 버튼(차트 모양) 선택
+        2. Add a new panel 메뉴 선택
+        3. 패널의 정보를 입력할 수 있는 화면이 나타난다.
+        4. 아래에 보면 Run queries 버튼 오른쪽에 Builder, Code라는 버튼이 보이는데 Code를 선택
+        5. Enter a PromQL query.. 이라는 부분에 메트릭을 입력하면 된다.
+
+    CPU 메트릭 만들기
+    - system_cpu_usage: 시스템의 CPU 사용량
+    - process_cpu_usage: JVM 프로세스 CPU 사용량
+    PromQL에 system_cpu_usage를 입력하고 Run queries 버튼을 선택하면 패널에 시스템 CPU 사용량을 그래프로 확인할 수 있음
+    process_cpu_usage도 하나의 그래프에서 확인이 가능한데 화면 하단의 + Query 버튼을 선택해야 한다.
+    추가한 부분의 PromQL에 processs_cpu_usage를 입력하고 Run queries 버튼을 선택하면 패널에 프로세스 CPU 사용량이 추가된 것을 확인할 수 있다.
+
+    그래프의 데이터 이름 변경
+    - 패널 그래프 하단을 보면 범례(Legend)라고 하는 차트에 제공하는 데이터 종류를 구분하는 텍스트가 JSON으로 표시되어 있다.
+    - system_cpu_usage를 입력한 곳에 하단의 Options를 선택한 후 Legend를 선택하고 Custom을 선택한다. system cpu를 입력하면 이름이 변경된 걸 확인할 수 있다.
+
+    패널 이름 설정
+    - 오른쪽에 보면 Panel options라는 부분을 확인할 수 있다. Title: CPU 사용량
 */
 @SpringBootApplication
 public class ActuatorApplication {
