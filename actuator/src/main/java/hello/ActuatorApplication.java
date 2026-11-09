@@ -366,6 +366,39 @@ import org.springframework.context.annotation.Bean;
     패널 이름 설정
     - 오른쪽에 보면 Panel options라는 부분을 확인할 수 있다. Title: CPU 사용량
 */
+/*
+    그라파나 - 공유 대시보드 활용
+    - 사이트 주소: https://grafana.com/grafana/dashboards/
+
+    대시보드 불러오기
+    - 그라파나에 접속
+        1. 왼쪽 Dashboards 메뉴 선택
+        2. New 버튼 선택 -> Import 선택
+        3. 불러올 대시보드 숫자(11378)를 입력하고 Load 버튼 선택 (검색에 Spring 치면 해당 대시보드를 볼 수 있음)
+        4. Prometheus 데이터소스를 선택하고 Import 버튼 선택
+    대시보드를 확인해보면 거의 대부분의 메트릭을 대시보드에 표현한 것을 확인할 수 있다. 각각의 항목들을 보고 대시보드를 어떻게 구성해야 하는지도 학습할 수 있다.
+    참고로 일부 데이터의 경우 스프링 부트나 기타 라이브러리의 버전이 변함에 따라서 동작하지 않는 기능들도 있다. 이런 부분들은 수정해서 사용하면 된다.
+
+    불러온 대시보드 수정하기
+    - 대시보드를 수정하려면 먼저 수정모드로 변경해야 한다.
+        오른쪽 상단의 설정 버튼(톱니바퀴, Dashboard settings)을 선택 -> Make editable 선택
+    Jetty 통계 -> Tomcat 통계
+        이 대시보드는 톰캣이 아니라 Jetty라는 웹 서버를 기준으로 통계를 수집한다.
+        Jetty Statistics 부분으로 이동한 다음 설정 버튼을 통해 Title을 Tomcat Statistics로 변경
+
+    Thread Config Max 패널 설정 변경
+        jetty_threads_config.max -> tomcat_threads_config_max_threads로 변경
+
+    Thread 패널 설정 변경
+        jetty_threads_current -> tomcat_threads_current_threads
+        jetty_threads_busy -> tomcat_threads_busy_threads
+        jetty_threads_idle -> 제거
+        jetty_threads_jobs -> 제거
+
+    정리
+    이미 잘 만들어진 대시보드를 활요하면 편리하게 모니터링 환경을 구성할 수 있다. 그리고 가져온 대시보드들을 분석해 보면 필요한 대시보드를
+    만드는데 좋은 참고가 된다.
+*/
 @SpringBootApplication
 public class ActuatorApplication {
 
