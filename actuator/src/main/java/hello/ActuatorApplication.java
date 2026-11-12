@@ -1,6 +1,7 @@
 package hello;
 
 import hello.order.v0.OrderConfigV0;
+import hello.order.v1.OrderConfigV1;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.audit.InMemoryAuditEventRepository;
 import org.springframework.boot.actuate.web.exchanges.InMemoryHttpExchangeRepository;
@@ -401,7 +402,8 @@ import org.springframework.context.annotation.Import;
     이미 잘 만들어진 대시보드를 활요하면 편리하게 모니터링 환경을 구성할 수 있다. 그리고 가져온 대시보드들을 분석해 보면 필요한 대시보드를
     만드는데 좋은 참고가 된다.
 */
-@Import(OrderConfigV0.class)
+//@Import(OrderConfigV0.class)
+@Import(OrderConfigV1.class)
 @SpringBootApplication(scanBasePackages = "hello.controller")
 public class ActuatorApplication {
 
