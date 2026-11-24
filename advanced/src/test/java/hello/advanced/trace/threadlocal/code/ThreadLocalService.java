@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ThreadLocalService {
 
     // 쓰레드 로컬을 사용하면 각 쓰레드마다 별도의 내부 저장소를 제공한다. 따라서 같은 인스턴스의 쓰레드 로컬 필드에 접근해도 문제가 없다.
+    // 따라서 실무에서도 이렇게 ThreadLocal을 사용해서 동기화 문제를 해결한다고 함
     private ThreadLocal<String> nameStore = new ThreadLocal<>();
 
     public String logic(String name) {
